@@ -89,3 +89,14 @@ Ensure postgres is running with corresponding user see [configuration](config/da
 bundle exec rake db:setup
 bundle exec rake db:migrate
 ```
+
+
+### Datamodel
+
+To start with, I decided to introduce only two models: Order and OrderItem. The latter represents pizza items, but I wanted to keep it a bit more generic since an order might also contain drinks, cookies, etc. in the future. While I could already introduce a polymorphic association to support this, I opted against it since this is currently just an assumption and not something explicitly required by the task.
+
+For discounts and promotions, I considered introducing a separate model but decided against that as well, since they can be handled through the provided configuration for now. There is currently no use case that would justify introducing an additional model.
+
+Regarding the Order state attribute, I decided to infer it from the object's existing attributes. If completed_at is not set, the order is considered OPEN. Once completed_at is set, the order is considered COMPLETED.
+
+Introducing a separate database column for the state could lead to inconsistencies. For example, completed_at could be set while the state still indicates OPEN.
