@@ -1,3 +1,5 @@
+[![CI](https://github.com/jethroo/rails-pizza-challenge/actions/workflows/ci.yml/badge.svg)](https://github.com/jethroo/rails-pizza-challenge/actions/workflows/ci.yml)
+
 # Acture Group Rails Coding Challenge
 
 We are excited that you are interested in performing our coding challenge. The purpose of this assignment is to see how you approach problems and evaluate the quality of your code.
