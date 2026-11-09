@@ -1,0 +1,20 @@
+# PostgreSQL. Defaults suit `rails s` on the host (Postgres on localhost);
+# docker compose overrides them via ENV (DB_HOST=db).
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  username: <%= ENV.fetch("DB_USER", "postgres") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "postgres") %>
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: rails-pizza-challenge_development
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development.
+test:
+  <<: *default
+  database: rails-pizza-challenge_test

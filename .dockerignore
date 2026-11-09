@@ -1,0 +1,15 @@
+/.git/
+/.gitignore
+/.bundle
+/.env*
+
+# Secrets: mount them at runtime, never bake them into the image.
+/config/credentials/*.key
+
+/log/*
+/tmp/*
+/storage/*
+/node_modules/
+/app/assets/builds/*
+!/app/assets/builds/.keep
+/public/assets
