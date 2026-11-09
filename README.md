@@ -2,7 +2,6 @@
 
 We are excited that you are interested in performing our coding challenge. The purpose of this assignment is to see how you approach problems and evaluate the quality of your code.
 
-
 ## The task and requirements
 
 This challenge is about implementing a simple pizza order overview for a restaurant. All orders need to be listed, with the items they contain, their details and the total price. In addition, it is possible to mark orders as completed.
@@ -42,3 +41,49 @@ In [`data/config.yml`](data/config.yml) you can find the list of selectable pizz
 - How good are you at writing tests? And how easy are they to read and understand?
 - How well is your solution documented? Are all steps for installation and execution described?
 - How proficient are you in using git?
+
+
+## Coding Challenge Comments by Carsten
+
+### Running the dockerized rails 8 app
+
+Starting the containers:
+```bash
+docker compose up -d
+```
+The app will be served on [localhost](http://localhost:3000/)
+
+Setting up the database(s):
+```bash
+docker compose exec web rake db:setup
+```
+
+Running migrations:
+```bash
+docker compose exec web rake db:migrate
+```
+
+Running the console
+```bash
+docker compose exec web bin/rails c
+```
+
+### Running the app without docker
+
+
+Starting the server via binstub or
+```bash
+bin/rails server
+```
+
+directly via
+```bash
+bundle exec rails s
+```
+
+Ensure postgres is running with corresponding user see [configuration](../config/database.yml:7) and database are present and migrated:
+
+```bash
+bundle exec rake db:setup
+bundle exec rake db:migrate
+```
