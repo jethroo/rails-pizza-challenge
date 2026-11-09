@@ -81,7 +81,7 @@ directly via
 bundle exec rails s
 ```
 
-Ensure postgres is running with corresponding user see [configuration](../config/database.yml:7) and database are present and migrated:
+Ensure postgres is running with corresponding user see [configuration](config/database.yml#L7) and database are present and migrated:
 
 ```bash
 bundle exec rake db:setup
