@@ -107,6 +107,44 @@ Regarding the Order state attribute, I decided to infer it from the object's exi
 
 Introducing a separate database column for the state could lead to inconsistencies. For example, completed_at could be set while the state still indicates OPEN.
 
+## Price Calculations
+
+Since `BigDecimal` is preferred over `Float` for financial calculations due to its predictable decimal arithmetic and lack of floating-point precision errors, I decided to use it consistently throughout the pricing calculations.
+
+I moved the provided `config.yml` to `./config/order_config.yml` so I could load the configuration directly through Rails using `config_for(:order_config)`. All prices defined in the configuration are converted to `BigDecimal` accordingly.
+
+For calculating order prices, I identified three main responsibilities:
+
+- **`OrderItem`**: Loads the required ingredient prices, pizza prices, and size multipliers to calculate its own price.
+- **`Order`**: Loads the applicable promotions and discount codes needed to calculate the order total.
+- **`OrderPricingService`**: Uses the methods provided by `OrderItem` and `Order` to calculate the total item price, apply promotions, and finally apply any discount.
+
+#### Order Pricing Components
+
+The pricing service does not modify previously generated price components. Instead, it adds separate components with negative amounts to represent promotions and discounts.
+
+| Name | Amount (€) | Size | Extras (€) |
+|---|---:|---|---:|
+| Salami | 7.00 | medium | 1.00 |
+| Salami | 4.20 | small | 0.00 |
+| Salami | 4.20 | small | 0.00 |
+| Salami | 4.20 | small | 0.00 |
+| Salami | 5.95 | small | 1.75 |
+| Salami (Promotion) | -4.20 | small | 0.00 |
+| Salami (Promotion) | -4.20 | small | 0.00 |
+| Discount | -0.8575 | — | 0.00 |
+| **Total (rounded)** | **16.29** | | |
+
+The implementation would need some adjustments if tax calculations were involved, particularly regarding rounding rules and when rounding should be applied.
+
+The promotion implementation is currently closely tied to the provided configuration structure and pizza items. This is acceptable for the current scope, as there are no requirements for other item types yet. However, it would need some refactoring if additional items, such as beverages or cookies, were introduced.
+
 ### Order Index View
 
+For the order index page, I followed the provided example image regarding which information should be displayed and how it should be arranged.
+
+As mentioned above, the pricing details could be presented in more detail, but I kept the view aligned with the given requirements.
+
 ![Order Index View](images/order-index.png)
+
+The Complete Order action currently just redirects back to the order index. Since the challenge explicitly mentioned keeping the time investment limited, I decided against adding more sophisticated UI features, such as dynamic updates with Stimulus or toast notifications styled with Tailwind. 😅
