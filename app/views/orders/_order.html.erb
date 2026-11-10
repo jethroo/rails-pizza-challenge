@@ -37,10 +37,22 @@
     <div>
       <h3 class="mb-2 text-sm font-semibold">Items:</h3>
 
-      <ul class="list-disc space-y-1 pl-5 text-sm">
+      <ul class="list-disc space-y-2 pl-5 text-sm">
         <% order.order_items.each do |item| %>
           <li>
             <%= item.name %> (<%= item.size.capitalize %>)
+
+            <% if item.extra_ingredients.present? %>
+              <div class="text-xs text-green-700">
+                + <%= item.extra_ingredients.join(", ") %>
+              </div>
+            <% end %>
+
+            <% if item.omitted_ingredients.present? %>
+              <div class="text-xs text-red-600">
+                - <%= item.omitted_ingredients.join(", ") %>
+              </div>
+            <% end %>
           </li>
         <% end %>
       </ul>

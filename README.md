@@ -65,6 +65,11 @@ Running migrations:
 docker compose exec web rake db:migrate
 ```
 
+Running migrations:
+```bash
+docker compose exec web rake db:seed
+```
+
 Running the console
 ```bash
 docker compose exec web bin/rails c
@@ -83,11 +88,12 @@ directly via
 bundle exec rails s
 ```
 
-Ensure postgres is running with corresponding user see [configuration](config/database.yml#L7) and database are present and migrated:
+Ensure postgres is running with corresponding user see [configuration](config/database.yml#L7) and database are present, migrated and seeded:
 
 ```bash
 bundle exec rake db:setup
 bundle exec rake db:migrate
+bundle exec rake db:seed
 ```
 
 
@@ -100,3 +106,7 @@ For discounts and promotions, I considered introducing a separate model but deci
 Regarding the Order state attribute, I decided to infer it from the object's existing attributes. If completed_at is not set, the order is considered OPEN. Once completed_at is set, the order is considered COMPLETED.
 
 Introducing a separate database column for the state could lead to inconsistencies. For example, completed_at could be set while the state still indicates OPEN.
+
+### Order Index View
+
+![Order Index View](images/order-index.png)
