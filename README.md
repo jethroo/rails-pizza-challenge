@@ -53,7 +53,7 @@ Starting the containers:
 ```bash
 docker compose up -d
 ```
-The app will be served on [localhost](http://localhost:3000/)
+The app will be served on [localhost](http://localhost:3000/orders)
 
 Setting up the database(s):
 ```bash
