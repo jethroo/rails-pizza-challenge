@@ -7,6 +7,7 @@ class OrdersController < ApplicationController
 
   def update
     @order.update!(completed_at: Time.current)
+
     redirect_to orders_path, notice: "Order completed."
   end
 
