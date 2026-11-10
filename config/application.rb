@@ -18,7 +18,7 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Rails8TailwindDocker
+module RailsPizzaChallenge
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
@@ -38,5 +38,7 @@ module Rails8TailwindDocker
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    config.orders = config_for(:order_config)
   end
 end
