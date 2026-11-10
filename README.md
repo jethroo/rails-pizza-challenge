@@ -73,9 +73,9 @@ docker compose exec web bin/rails c
 ### Running the app without docker
 
 
-Starting the server via binstub or
+Starting the server via binstub 
 ```bash
-bin/rails server
+bin/dev
 ```
 
 directly via

@@ -3,6 +3,8 @@ class Order < ApplicationRecord
 
   validates :uid, presence: true,  uniqueness: true
 
+  scope :open, -> { where(completed_at: nil) }
+
   def discount_code_multiplier
     code = Rails.configuration.orders[:discounts][discount_code&.to_sym]
     return 0 unless code
