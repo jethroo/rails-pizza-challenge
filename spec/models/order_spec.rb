@@ -36,4 +36,98 @@ RSpec.describe Order, type: :model do
       expect(order).to be_valid
     end
   end
+
+  describe "#discount_code_multiplier" do
+    let(:discounts) do
+      {
+        SAVE10: { deduction_in_percent: 10 },
+        SAVE25: { deduction_in_percent: 25 },
+        NO_PERCENTAGE: {}
+      }
+    end
+
+    before do
+      allow(Rails.configuration).to receive(:orders)
+        .and_return(discounts: discounts)
+    end
+
+    it "returns the discount as a multiplier" do
+      order = Order.new(discount_code: "SAVE25")
+
+      expect(order.discount_code_multiplier).to eq(0.25)
+    end
+
+    it "returns zero when no discount code is provided" do
+      order = Order.new(discount_code: nil)
+
+      expect(order.discount_code_multiplier).to eq(0)
+    end
+
+    it "returns zero for an unknown discount code" do
+      order = Order.new(discount_code: "INVALID")
+
+      expect(order.discount_code_multiplier).to eq(0)
+    end
+
+    it "returns zero when the percentage is missing" do
+      order = Order.new(discount_code: "NO_PERCENTAGE")
+
+      expect(order.discount_code_multiplier).to eq(0)
+    end
+  end
+
+  describe "#promotions" do
+    let(:promotions) do
+      {
+        FREE_PIZZA: { type: :free_pizza },
+        TWO_FOR_ONE: { type: :two_for_one }
+      }
+    end
+
+    before do
+      allow(Rails.configuration).to receive(:orders)
+        .and_return(promotions: promotions)
+    end
+
+    it "returns the configuration for a valid promotion" do
+      order = Order.new(promotion_codes: [ "FREE_PIZZA" ])
+
+      expect(order.promotions).to eq([
+        { type: :free_pizza }
+      ])
+    end
+
+    it "returns multiple valid promotions" do
+      order = Order.new(
+        promotion_codes: [ "FREE_PIZZA", "TWO_FOR_ONE" ]
+      )
+
+      expect(order.promotions).to eq([
+        { type: :free_pizza },
+        { type: :two_for_one }
+      ])
+    end
+
+    it "ignores unknown promotion codes" do
+      order = Order.new(
+        promotion_codes: [ "INVALID", "FREE_PIZZA" ]
+      )
+
+      expect(order.promotions).to eq([
+        { type: :free_pizza }
+      ])
+    end
+
+    it "returns an empty array when no promotions are provided" do
+      order = Order.new(promotion_codes: [])
+
+      expect(order.promotions).to be_empty
+    end
+
+    it "returns an empty array when all codes are invalid" do
+      order = Order.new(promotion_codes: [ "INVALID" ])
+
+      expect(order.promotions).to be_empty
+    end
+  end
 end
