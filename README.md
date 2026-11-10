@@ -148,3 +148,12 @@ As mentioned above, the pricing details could be presented in more detail, but I
 ![Order Index View](images/order-index.png)
 
 The Complete Order action currently just redirects back to the order index. Since the challenge explicitly mentioned keeping the time investment limited, I decided against adding more sophisticated UI features, such as dynamic updates with Stimulus or toast notifications styled with Tailwind. 😅
+
+### GitHub Actions – CI
+
+The CI pipeline runs a few basic code quality and security checks:
+
+- **`brakeman`**: Scans for common security vulnerabilities in Rails applications.
+- **`bundler-audit`**: Checks dependencies for known security vulnerabilities.
+- **`rubocop`**: Enforces Ruby coding style conventions.
+- **`rspec`**: Runs the test suite with SimpleCov enabled (coverage reports are not exported yet).
