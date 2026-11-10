@@ -1,0 +1,86 @@
+<div class="w-full rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+  <div class="mb-4 flex items-start justify-between">
+    <div>
+      <h2 class="text-lg font-semibold">
+        Order #<%= order.uid.to_s %>
+      </h2>
+      <p class="text-sm text-gray-500">
+        created_at: <%= l(order.created_at, format: :short) %>
+      </p>
+    </div>
+
+    <% if order.completed_at? %>
+      <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+        Completed
+      </span>
+    <% else %>
+      <span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+        Open
+      </span>
+    <% end %>
+  </div>
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <!-- Left: Order information -->
+    <div class="space-y-2 text-sm">
+      <p>
+        <span class="font-semibold">Promotion Codes:</span>
+        <%= order.promotion_codes.presence&.join(", ") || "-" %>
+      </p>
+
+      <p>
+        <span class="font-semibold">Discount Codes:</span>
+        <%= order.discount_code.presence || "-" %>
+      </p>
+    </div>
+
+    <!-- Right: Items -->
+    <div>
+      <h3 class="mb-2 text-sm font-semibold">Items:</h3>
+
+      <ul class="list-disc space-y-2 pl-5 text-sm">
+        <% order.order_items.each do |item| %>
+          <li>
+            <%= item.name %> (<%= item.size.capitalize %>)
+
+            <% if item.extra_ingredients.present? %>
+              <div class="text-xs text-green-700">
+                + <%= item.extra_ingredients.join(", ") %>
+              </div>
+            <% end %>
+
+            <% if item.omitted_ingredients.present? %>
+              <div class="text-xs text-red-600">
+                - <%= item.omitted_ingredients.join(", ") %>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Total and action -->
+  <div class="border-t border-gray-100 pt-4 mt-6">
+    <div class="mb-4 flex justify-between font-semibold">
+      <span>Total</span>
+      <span>
+        <%= number_to_currency(
+          OrderPricingService.new(order).call,
+          unit: "€",
+          format: "%n %u",
+          separator: ",",
+          delimiter: "."
+        ) %>
+      </span>
+    </div>
+
+    <% unless order.completed_at? %>
+      <%= button_to "Complete order",
+          order_path(order),
+          method: :patch,
+          class: "w-full rounded-lg bg-blue-600
+                  px-4 py-2 text-white font-medium
+                  hover:bg-blue-700 cursor-pointer" %>
+    <% end %>
+  </div>
+</div>

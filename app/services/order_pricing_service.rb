@@ -13,14 +13,13 @@ class OrderPricingService
     apply_promotions
     apply_discount
 
-    # order_total_sum.round(2)
     order_total_sum.round(2, BigDecimal::ROUND_HALF_UP)
   end
 
   private
 
   def order_total_sum
-    order_total.sum(&:amount)
+    order_total.sum(BigDecimal("0"), &:amount)
   end
 
   def apply_item_prices
@@ -54,6 +53,8 @@ class OrderPricingService
   end
 
   def apply_discount
+    return if order.discount_code_multiplier.zero?
+
     order_total << PriceComponent.new(
       "Discount",
       order_total_sum * order.discount_code_multiplier * -1,
